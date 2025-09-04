@@ -1,0 +1,14 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.small-field {
+  width: 120px;
+  margin-right: 15px;
+}
+
+.full-width-table {
+  width: 100%;
+  margin-top: 15px;
+}
