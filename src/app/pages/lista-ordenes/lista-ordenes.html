@@ -1,48 +1,51 @@
-<h2>Lista de Órdenes</h2>
+<div class="container mt-5">
+  <h2 class="mb-4 text-primary fw-bold">Lista de Órdenes</h2>
 
-<!-- Tabla con Angular Material -->
-<table mat-table [dataSource]="orders" class="mat-elevation-z8 full-width-table" *ngIf="orders.length > 0; else noData">
+  <!-- Botón para ir a nueva orden -->
+  <div class="mb-3">
+    <a routerLink="/nueva-orden" class="btn btn-success">
+      <i class="bi bi-plus-circle"></i> Nueva Orden
+    </a>
+  </div>
 
-  <!-- Columna ID -->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef> ID </th>
-    <td mat-cell *matCellDef="let o"> {{ o.id }} </td>
-  </ng-container>
+  <table class="table table-hover table-bordered shadow-sm" *ngIf="orders.length > 0; else noData">
+    <thead class="table-primary">
+      <tr>
+        <th>ID</th>
+        <th>Persona</th>
+        <th>Fecha</th>
+        <th>Detalles</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let o of orders">
+        <td>{{ o.id }}</td>
+        <td>{{ o.personName }}</td>
+        <td>{{ o.createdAt | date:'short' }}</td>
+        <td>
+          <ul class="list-unstyled mb-0">
+            <li *ngFor="let d of o.orderDetails">
+              {{ d.itemName }} — Cantidad: {{ d.quantity }} — Precio: Q{{ d.price }} — Total: Q{{ d.total }}
+            </li>
+          </ul>
+        </td>
+        <td>
+          <!-- ✏️ Botón Editar -->
+          <button class="btn btn-outline-primary btn-sm me-2" (click)="editOrder(o)">
+            <i class="bi bi-pencil"></i> Editar
+          </button>
 
-  <!-- Columna Persona -->
-  <ng-container matColumnDef="persona">
-    <th mat-header-cell *matHeaderCellDef> Persona </th>
-    <td mat-cell *matCellDef="let o"> {{ o.personName }} </td>
-  </ng-container>
+          <!-- 🗑️ Botón Eliminar -->
+          <button class="btn btn-outline-danger btn-sm" (click)="deleteOrder(o.id)">
+            <i class="bi bi-trash"></i> Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-  <!-- Columna Fecha -->
-  <ng-container matColumnDef="fecha">
-    <th mat-header-cell *matHeaderCellDef> Fecha </th>
-    <td mat-cell *matCellDef="let o"> {{ o.createdAt | date:'short' }} </td>
-  </ng-container>
-
-  <!-- Columna Detalles -->
-  <ng-container matColumnDef="detalles">
-    <th mat-header-cell *matHeaderCellDef> Detalles </th>
-    <td mat-cell *matCellDef="let o">
-      <mat-list dense>
-        <mat-list-item *ngFor="let d of o.orderDetails">
-          <!-- 👇 Ahora usamos itemName que ya viene del backend -->
-          {{ d.itemName }} — 
-          Cantidad: {{ d.quantity }} — 
-          Precio: Q{{ d.price }} — 
-          Total: Q{{ d.total }}
-        </mat-list-item>
-      </mat-list>
-    </td>
-  </ng-container>
-
-  <!-- Filas -->
-  <tr mat-header-row *matHeaderRowDef="['id','persona','fecha','detalles']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['id','persona','fecha','detalles'];"></tr>
-</table>
-
-<!-- Si no hay órdenes -->
-<ng-template #noData>
-  <p>No hay órdenes registradas.</p>
-</ng-template>
+  <ng-template #noData>
+    <p class="text-muted">No hay órdenes registradas.</p>
+  </ng-template>
+</div>

@@ -32,6 +32,13 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/orders`);
   }
 
+  // 🗑️ Eliminar orden
+  deleteOrder(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/orders/${id}`);
+  }
+updateOrder(id: number, order: any): Observable<any> {
+  return this.http.put<any>(`${this.baseUrl}/orders/${id}`, order);
+}
   // Notificación cuando se crea una orden
   notifyOrderCreated() {
     this.orderCreatedSource.next();

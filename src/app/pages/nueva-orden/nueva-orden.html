@@ -1,66 +1,75 @@
-<h2>Nueva Orden</h2>
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary fw-bold">Gestión de Órdenes</h2>
 
-<!-- Selección de Persona -->
-<mat-form-field appearance="fill" class="full-width">
-  <mat-label>Persona</mat-label>
-  <mat-select [(ngModel)]="selectedPerson">
-    <mat-option *ngFor="let p of persons" [value]="p.id">{{ p.name }}</mat-option>
-  </mat-select>
-</mat-form-field>
+  <!-- Nueva / Editar Orden -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h4 class="mb-3">{{ editingOrderId ? 'Editar Orden' : 'Nueva Orden' }}</h4>
 
-<!-- Selección de Item -->
-<mat-form-field appearance="fill" class="full-width">
-  <mat-label>Item</mat-label>
-  <mat-select [(ngModel)]="selectedItem">
-    <mat-option *ngFor="let i of items" [value]="i.id">{{ i.name }} - Q{{ i.price }}</mat-option>
-  </mat-select>
-</mat-form-field>
+      <!-- Persona -->
+      <div class="mb-3">
+        <label for="persona" class="form-label">Persona</label>
+        <select id="persona" class="form-select" [(ngModel)]="selectedPerson">
+          <option [ngValue]="null">-- Seleccione una persona --</option>
+          <option *ngFor="let p of persons" [ngValue]="p.id">
+            {{ p.fullName }}
+          </option>
+        </select>
+      </div>
 
-<!-- Cantidad -->
-<mat-form-field appearance="fill" class="small-field">
-  <mat-label>Cantidad</mat-label>
-  <input matInput type="number" [(ngModel)]="quantity" min="1">
-</mat-form-field>
+      <!-- Item -->
+      <div class="mb-3">
+        <label for="item" class="form-label">Item</label>
+        <select id="item" class="form-select" [(ngModel)]="selectedItem">
+          <option [ngValue]="null">-- Seleccione un item --</option>
+          <option *ngFor="let i of items" [ngValue]="i.id">
+            {{ i.name }} - Q{{ i.price }}
+          </option>
+        </select>
+      </div>
 
-<!-- Botón agregar -->
-<button mat-raised-button color="primary" (click)="addItem()">
-  Agregar Item
-</button>
+      <!-- Cantidad -->
+      <div class="mb-3">
+        <label for="cantidad" class="form-label">Cantidad</label>
+        <input id="cantidad" type="number" class="form-control" [(ngModel)]="quantity" min="1">
+      </div>
 
-<!-- Tabla de detalles -->
-<h3>Detalles de la orden</h3>
-<table mat-table [dataSource]="orderDetails" class="mat-elevation-z8 full-width-table">
+      <!-- Botón Agregar -->
+      <button class="btn btn-primary" (click)="addItem()">
+        <i class="bi bi-plus-circle"></i> Agregar Item
+      </button>
+    </div>
+  </div>
 
-  <!-- Columna Item -->
-  <ng-container matColumnDef="item">
-    <th mat-header-cell *matHeaderCellDef> Item </th>
-    <td mat-cell *matCellDef="let d"> {{ getItemName(d.itemId) }} </td>
-  </ng-container>
+  <!-- Detalles de la orden -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h4 class="mb-3">Detalles de la orden</h4>
 
-  <!-- Columna Cantidad -->
-  <ng-container matColumnDef="cantidad">
-    <th mat-header-cell *matHeaderCellDef> Cantidad </th>
-    <td mat-cell *matCellDef="let d"> {{ d.quantity }} </td>
-  </ng-container>
+      <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Item</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of orderDetails">
+            <td>{{ getItemName(d.itemId) }}</td>
+            <td>{{ d.quantity }}</td>
+            <td>Q{{ d.price }}</td>
+            <td>Q{{ d.price * d.quantity }}</td>
+          </tr>
+        </tbody>
+      </table>
 
-  <!-- Columna Precio -->
-  <ng-container matColumnDef="precio">
-    <th mat-header-cell *matHeaderCellDef> Precio </th>
-    <td mat-cell *matCellDef="let d"> Q{{ d.price }} </td>
-  </ng-container>
-
-  <!-- Columna Total -->
-  <ng-container matColumnDef="total">
-    <th mat-header-cell *matHeaderCellDef> Total </th>
-    <td mat-cell *matCellDef="let d"> Q{{ d.price * d.quantity }} </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="['item','cantidad','precio','total']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['item','cantidad','precio','total'];"></tr>
-</table>
-
-<!-- Botón guardar -->
-<br>
-<button mat-raised-button color="accent" (click)="saveOrder()">
-  Guardar Orden
-</button>
+      <!-- Guardar / Actualizar -->
+      <button class="btn btn-success" (click)="saveOrder()">
+        <i class="bi" [ngClass]="editingOrderId ? 'bi-pencil' : 'bi-save'"></i>
+        {{ editingOrderId ? 'Actualizar Orden' : 'Guardar Orden' }}
+      </button>
+    </div>
+  </div>
+</div>
