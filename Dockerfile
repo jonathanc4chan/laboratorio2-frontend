@@ -9,4 +9,5 @@ RUN npm run build   # 👈 QUITA el --configuration production extra
 # Etapa de servidor Nginx
 FROM nginx:alpine
 COPY --from=build /app/dist/laboratorio2-frontend /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
