@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build   # 👈 QUITA el --configuration production extra
+RUN npm run build   # 👈 ahora ya funciona si angular.json está correcto
 
 # Etapa de servidor Nginx
 FROM nginx:alpine

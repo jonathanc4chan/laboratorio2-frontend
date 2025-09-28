@@ -1,51 +1,32 @@
-<div class="container mt-5">
-  <h2 class="mb-4 text-primary fw-bold">Lista de Órdenes</h2>
-
-  <!-- Botón para ir a nueva orden -->
-  <div class="mb-3">
-    <a routerLink="/nueva-orden" class="btn btn-success">
-      <i class="bi bi-plus-circle"></i> Nueva Orden
-    </a>
-  </div>
-
-  <table class="table table-hover table-bordered shadow-sm" *ngIf="orders.length > 0; else noData">
-    <thead class="table-primary">
-      <tr>
-        <th>ID</th>
-        <th>Persona</th>
-        <th>Fecha</th>
-        <th>Detalles</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let o of orders">
-        <td>{{ o.id }}</td>
-        <td>{{ o.personName }}</td>
-        <td>{{ o.createdAt | date:'short' }}</td>
-        <td>
-          <ul class="list-unstyled mb-0">
-            <li *ngFor="let d of o.orderDetails">
-              {{ d.itemName }} — Cantidad: {{ d.quantity }} — Precio: Q{{ d.price }} — Total: Q{{ d.total }}
-            </li>
-          </ul>
-        </td>
-        <td>
-          <!-- ✏️ Botón Editar -->
-          <button class="btn btn-outline-primary btn-sm me-2" (click)="editOrder(o)">
-            <i class="bi bi-pencil"></i> Editar
-          </button>
-
-          <!-- 🗑️ Botón Eliminar -->
-          <button class="btn btn-outline-danger btn-sm" (click)="deleteOrder(o.id)">
-            <i class="bi bi-trash"></i> Eliminar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <ng-template #noData>
-    <p class="text-muted">No hay órdenes registradas.</p>
-  </ng-template>
-</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Persona</th>
+      <th>Fecha</th>
+      <th>Detalles</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of orders">
+      <td>{{ order.id }}</td>
+      <td>{{ order.personName }}</td>
+      <td>{{ order.createdAt | date:'short' }}</td>
+      <td>
+        <ul *ngIf="order.orderDetails?.length; else noDetails">
+          <li *ngFor="let d of order.orderDetails">
+            {{ d.itemName }} — Cant: {{ d.quantity }} — Q{{ d.price }} — Total: Q{{ d.total }}
+          </li>
+        </ul>
+        <ng-template #noDetails>
+          <span>Sin detalles</span>
+        </ng-template>
+      </td>
+      <td>
+        <button (click)="editOrder(order)">Editar</button>
+        <button (click)="deleteOrder(order.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

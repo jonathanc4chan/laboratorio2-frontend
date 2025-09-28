@@ -1,9 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from '../../services/api';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
-import { Router } from '@angular/router'; // 👈 importar
+import { Router } from '@angular/router';
+import { ApiService } from '../../services/api';
+
+// 👇 Interfaces para tipado fuerte
+export interface OrderDetail {
+  itemName: string;
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+export interface Order {
+  id: number;
+  personName: string;
+  createdAt: string;
+  orderDetails: OrderDetail[];   // 👈 corregido
+}
 
 @Component({
   selector: 'app-lista-ordenes',
@@ -13,13 +28,14 @@ import { Router } from '@angular/router'; // 👈 importar
   styleUrls: ['./lista-ordenes.css']
 })
 export class ListaOrdenesComponent implements OnInit {
-  orders: any[] = [];
+  orders: Order[] = [];
 
-  constructor(private api: ApiService, private router: Router) {} // 👈 inyectar router
+  constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadOrders();
 
+    // 🔄 Recarga la lista cuando se crea una nueva orden
     this.api.orderCreated$.subscribe(() => {
       this.loadOrders();
     });
@@ -27,7 +43,7 @@ export class ListaOrdenesComponent implements OnInit {
 
   loadOrders(): void {
     this.api.getOrders().subscribe({
-      next: (data: any[]) => {
+      next: (data: Order[]) => {
         this.orders = data;
       },
       error: (err) => {
@@ -37,14 +53,14 @@ export class ListaOrdenesComponent implements OnInit {
   }
 
   // ✏️ Editar orden
-  editOrder(order: any): void {
+  editOrder(order: Order): void {
     localStorage.setItem('orderToEdit', JSON.stringify(order));
-    this.router.navigate(['/nueva-orden']); // 👈 redirigir al formulario
+    this.router.navigate(['/nueva-orden']);
   }
 
   // ➕ Nueva orden
   goToNewOrder(): void {
-    this.router.navigate(['/nueva-orden']); // 👈 redirigir a nueva orden
+    this.router.navigate(['/nueva-orden']);
   }
 
   // 🗑️ Eliminar orden
